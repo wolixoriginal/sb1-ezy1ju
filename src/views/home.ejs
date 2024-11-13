@@ -1,0 +1,46 @@
+<%- include('partials/header', { title: 'Federated Social' }) %>
+
+<div class="home-container">
+    <% if (error) { %>
+        <div class="alert alert-error">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <section class="create-account">
+        <h2>Create Account</h2>
+        <form action="/create-account" method="POST" class="account-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Choose username (min 3 characters)" required minlength="3" pattern="[a-zA-Z0-9_-]+">
+            </div>
+            <div class="form-group">
+                <label for="displayName">Display Name (optional)</label>
+                <input type="text" id="displayName" name="displayName" placeholder="Your display name">
+            </div>
+            <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+    </section>
+
+    <section class="users-list">
+        <h2>Active Users</h2>
+        <div class="users-grid">
+            <% actors.forEach(actor => { %>
+                <div class="user-card">
+                    <img src="<%= actor.avatar %>" alt="<%= actor.username %>'s avatar" class="user-avatar">
+                    <h3>@<%= actor.username %></h3>
+                    <% if (actor.displayName !== actor.username) { %>
+                        <p class="display-name"><%= actor.displayName %></p>
+                    <% } %>
+                    <div class="user-stats">
+                        <span><%= actor.followers.size %> followers</span>
+                        <span><%= actor.following.size %> following</span>
+                    </div>
+                    <a href="/profile/<%= actor.username %>" class="btn btn-secondary">View Profile</a>
+                </div>
+            <% }); %>
+        </div>
+    </section>
+</div>
+
+<%- include('partials/footer') %>

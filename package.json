@@ -1,0 +1,25 @@
+{
+  "name": "federated-social",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2",
+    "jsonld": "^8.3.1",
+    "node-fetch": "^3.3.2",
+    "nodemon": "^3.0.1",
+    "ejs": "^3.1.9",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "http-signature": "^1.3.6",
+    "crypto": "^1.0.1",
+    "queue": "^7.0.0",
+    "cache-manager": "^5.4.0"
+  }
+}

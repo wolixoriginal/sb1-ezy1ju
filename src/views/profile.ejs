@@ -1,0 +1,81 @@
+<%- include('partials/header', { title: `@${actor.username} - Federated Social` }) %>
+
+<div class="profile-container">
+    <% if (error) { %>
+        <div class="alert alert-error">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <section class="profile-header">
+        <img src="<%= actor.avatar %>" alt="<%= actor.username %>'s avatar" class="profile-avatar">
+        <h1>@<%= actor.username %></h1>
+        <% if (actor.displayName !== actor.username) { %>
+            <p class="display-name"><%= actor.displayName %></p>
+        <% } %>
+        <div class="profile-stats">
+            <span><%= actor.followers.size %> followers</span>
+            <span><%= actor.following.size %> following</span>
+        </div>
+        
+        <% if (currentActor && currentActor.username !== actor.username) { %>
+            <div class="follow-actions">
+                <% if (isFollowing) { %>
+                    <form action="/unfollow/<%= actor.username %>" method="POST">
+                        <input type="hidden" name="currentUser" value="<%= currentActor.username %>">
+                        <button type="submit" class="btn btn-secondary">Unfollow</button>
+                    </form>
+                <% } else { %>
+                    <form action="/follow/<%= actor.username %>" method="POST">
+                        <input type="hidden" name="currentUser" value="<%= currentActor.username %>">
+                        <button type="submit" class="btn btn-primary">Follow</button>
+                    </form>
+                <% } %>
+            </div>
+        <% } %>
+    </section>
+
+    <% if (currentActor && currentActor.username === actor.username) { %>
+        <section class="post-form">
+            <h2>Create Post</h2>
+            <form action="/post/<%= actor.username %>" method="POST">
+                <div class="form-group">
+                    <textarea name="content" placeholder="What's on your mind?" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+        </section>
+    <% } %>
+
+    <section class="posts">
+        <h2>Posts</h2>
+        <div class="posts-list">
+            <% actor.outbox.forEach(activity => { %>
+                <% if (activity.type === 'Create' && activity.object.type === 'Note') { %>
+                    <div class="post-card">
+                        <div class="post-header">
+                            <img src="<%= actor.avatar %>" alt="<%= actor.username %>'s avatar" class="post-avatar">
+                            <div class="post-meta">
+                                <span class="post-author">@<%= actor.username %></span>
+                                <span class="post-date"><%= new Date(activity.published).toLocaleString() %></span>
+                            </div>
+                        </div>
+                        <p class="post-content"><%= activity.object.content %></p>
+                        <div class="post-actions">
+                            <button class="btn btn-text">
+                                <span class="icon">❤️</span>
+                                <span><%= activity.object.likes?.length || 0 %></span>
+                            </button>
+                            <button class="btn btn-text">
+                                <span class="icon">💬</span>
+                                <span><%= activity.object.replies?.length || 0 %></span>
+                            </button>
+                        </div>
+                    </div>
+                <% } %>
+            <% }); %>
+        </div>
+    </section>
+</div>
+
+<%- include('partials/footer') %>
